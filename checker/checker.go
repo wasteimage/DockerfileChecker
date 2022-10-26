@@ -25,9 +25,9 @@ func Validate(dockerFilePath string, rows []string) error {
 			panic(err)
 		}
 		if !isExist {
-			return errors.New(fmt.Sprintf("row %s not exist", row))
+			return errors.New(fmt.Sprintf("row '%s' not exist", row))
 		}
-		fmt.Println(fmt.Sprintf("row %s found :)", row))
+		fmt.Println(fmt.Sprintf("row '%s' found :)", row))
 	}
 
 	fmt.Println("all rows founded! Dockerfile is in the format you need")
