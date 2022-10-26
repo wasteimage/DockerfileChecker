@@ -2,6 +2,7 @@ package checker
 
 import (
 	"bufio"
+	"errors"
 	"os"
 	"strings"
 )
@@ -13,18 +14,20 @@ type Checker interface {
 func Validate(dockerFilePath string, rows []string) error {
 	//получает пизды, докер файл и условие валидации
 	//ведет лог и возвращает ошибку или возвращает нихуя
-	f, err := os.Open(dockerFilePath)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
 
 	for _, row := range rows {
 
+		f, err := os.Open(dockerFilePath)
+		if err != nil {
+			return err
+		}
+
 		scanner := bufio.NewScanner(f)
+		isContains := false
 
 		for scanner.Scan() {
 			if strings.Contains(scanner.Text(), row) {
+				isContains = true
 				break
 			}
 		}
@@ -33,6 +36,11 @@ func Validate(dockerFilePath string, rows []string) error {
 			return err
 		}
 
+		if !isContains {
+			return errors.New("иди в пизду")
+		}
+
+		f.Close()
 	}
 
 	return nil
