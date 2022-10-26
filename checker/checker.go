@@ -1,10 +1,10 @@
 package checker
 
 import (
-	"bufio"
 	"errors"
-	"os"
-	"strings"
+	"fmt"
+	"io/ioutil"
+	"regexp"
 )
 
 type Checker interface {
@@ -12,36 +12,25 @@ type Checker interface {
 }
 
 func Validate(dockerFilePath string, rows []string) error {
-	//получает пизды, докер файл и условие валидации
-	//ведет лог и возвращает ошибку или возвращает нихуя
-
 	for _, row := range rows {
 
-		f, err := os.Open(dockerFilePath)
+		b, err := ioutil.ReadFile(dockerFilePath)
 		if err != nil {
-			return err
+			panic(err)
 		}
+		fmt.Println("reading file...")
 
-		scanner := bufio.NewScanner(f)
-		isContains := false
-
-		for scanner.Scan() {
-			if strings.Contains(scanner.Text(), row) {
-				isContains = true
-				break
-			}
+		isExist, err := regexp.Match(row, b)
+		if err != nil {
+			panic(err)
 		}
-
-		if err := scanner.Err(); err != nil {
-			return err
+		if !isExist {
+			return errors.New(fmt.Sprintf("row %s not exist", row))
 		}
-
-		if !isContains {
-			return errors.New("иди в пизду")
-		}
-
-		f.Close()
+		fmt.Println(fmt.Sprintf("row %s found :)", row))
 	}
+
+	fmt.Println("all rows founded! Dockerfile is in the format you need")
 
 	return nil
 }
