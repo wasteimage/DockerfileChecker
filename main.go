@@ -17,7 +17,7 @@ func NewCacheChecker() *CacheChecker {
 	var cacheList []*regexp.Regexp
 	validCache := []string{
 		`FROM\ +\${CACHE}\/?`,
-		`FROM +\${CI}\/\${BASE_IMAGE}:\${BASE_IMAGE_TAG}`,
+		`FROM\ +\${CI}\/\${BASE_IMAGE}:\${BASE_IMAGE_TAG}`,
 	}
 
 	for _, cache := range validCache {
