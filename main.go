@@ -37,7 +37,7 @@ func (c *CacheChecker) Check(dockerFileContent []byte) error {
 		isExist := cache.Match(dockerFileContent)
 
 		if isExist {
-			fmt.Printf("Row '%v' matches exclude condition", cache)
+			fmt.Printf("Condition '%s' is found", cache)
 			return nil
 		}
 	}
